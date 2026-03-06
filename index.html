@@ -96,10 +96,10 @@
 
         /* Subtle page curl shadow on hover */
         .nav-zone-left:hover {
-            background: linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 100%);
+            background: linear-gradient(to right, rgba(244, 213, 144, 0.5)0%, transparent 100%);
         }
         .nav-zone-right:hover {
-            background: linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 100%);
+            background: linear-gradient(to left, rgba(244, 213, 144, 0.5) 0%, transparent 100%);
         }
 
         img {
@@ -133,24 +133,6 @@
         .cover-auth { font-size: 2em; }
 
         .hidden { display: none !important; }
-
-        /* Fullscreen Button Styles */
-        #fullscreen-btn {
-            display: none;
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: sans-serif;
-        }
-
-        .glob-left, .glob-right { display: none; font-family: sans-serif; }
         
 
         /* Responsive adjustments */
@@ -163,7 +145,7 @@
 
             .book {
                 margin: auto;
-                width: 35vh;
+                /* width: 35vh; */
                 height: 100vh;
 
             }
@@ -206,15 +188,6 @@
             p.cover-cap { font-size: .75rem;  }
             p.cover-auth { font-size: 1em; margin-bottom: 2em; }
             #fullscreen-btn { display: block; }
-
-            .glob-left, .glob-right {
-                display: block;
-                width: 10%;
-                position: absolute;
-            }
-
-            .glob-left { left: 1em; }
-            .glob-right { right: 1em; }
         }
 
         /* Specific fix for Landscape Mobile */
@@ -257,32 +230,99 @@
             p.cover-auth { font-size: 1em; margin-bottom: 1em; }
             #fullscreen-btn { display: block; }
         }
+
+        /* Guide Overlay Styles */
+        #guide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+
+        .guide-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .guide-content {
+            position: relative;
+            width: 95%;
+            height: 60%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .guide-hand {
+            font-size: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        .guide-hand span {
+            font-size: 1rem;
+            margin-top: 10px;
+            font-family: sans-serif;
+        }
+
+        .guide-close {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 25px;
+            background: #fdfaf3;
+            color: #333;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
+    <div class="book-wrapper">
+        <div id="guide-overlay" class="guide-hidden" onclick="dismissGuide()">
+            <div class="guide-content">
+                <div class="guide-hand left"><span>Tap to go back</span>👈</div>
+                <div class="guide-hand right">👉<span>Tap to go forward</span></div>
+                <button class="guide-close">Got it!</button>
+            </div>
+        </div>
 
-<button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
-
-<div class="book-wrapper">
-    <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()">
-        <div class="glob-left">◂</div>
-    </div>
-    
-    <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()">
-        <div class="glob-right">▸</div>
-    </div>
-
-    <div class="book" id="book-container">
+        <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()">
+        </div>
         
-        <div class="spread active cover" id="page-0" onclick="nextPage()">
+        <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()">
+        </div>
+        
+        <div class="book" id="book-container">
+            
+        <div class="spread active cover" id="page-0" onclick="openBook()">
             <div style="padding: 40px;">
                 <h1>Pebbles Meets a Friend</h1>
                 <img src="images/pebbles_cover.png" alt="Pebbles Cover Art">
-                <p class="cover-cap">Original text and illustrations</p>
-                <p class="cover-auth">J. A. Puddephat</p>
-                <p class="cover-cap">Additional illustrations and colouration
-                    
-                    Google Gemini</p>
+                <p class="cover-cap">Original text and illustrations <br> <span class="cover-auth">J. A. Puddephat</span></p>
+                
+                <p class="cover-cap">Additional illustrations and colouration <br> Google Gemini</p>
+
+                <p class="cover-cap"><small>(Click to enter)</small></p>
             </div>
         </div>
 
@@ -434,6 +474,7 @@
 
 <script>
     let currentSpread = 0;
+    let lastSpread = 1;
     const totalSpreads = 11; 
 
     function updateDisplay() {
@@ -441,18 +482,16 @@
         allSpreads.forEach(s => s.classList.remove('active'));
         document.getElementById(`page-${currentSpread}`).classList.add('active');
 
-        // Navigation Zones logic
+        // Navigation Zones
         const prevZone = document.getElementById('global-prev');
         const nextZone = document.getElementById('global-next');
 
-        // Show Next zone unless on the last page
-        if (currentSpread < totalSpreads - 1) {
+        if (currentSpread < totalSpreads - 1 & currentSpread > 0) {
             nextZone.classList.remove('hidden');
         } else {
             nextZone.classList.add('hidden');
         }
 
-        // Show Prev zone only after the cover
         if (currentSpread > 0) {
             prevZone.classList.remove('hidden');
         } else {
@@ -460,9 +499,57 @@
         }
     }
 
+    // THE KEY CHANGE: Opening the book triggers Fullscreen Landscape
+    let guideShown = false;
+
+    function dismissGuide() {
+        document.getElementById('guide-overlay').classList.add('guide-hidden');
+    }
+
+    function openBook() {
+        const startStory = () => {
+            currentSpread = 1;
+            updateDisplay();
+            
+            // Show the guide only the first time they enter the story
+            if (!guideShown) {
+                document.getElementById('guide-overlay').classList.remove('guide-hidden');
+                guideShown = true;
+                // Auto-hide after 4 seconds if they don't click
+                setTimeout(dismissGuide, 4000);
+            }
+        };
+
+        // Only attempt fullscreen/landscape if on mobile
+        if (window.innerWidth <= 768) {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    if (screen.orientation && screen.orientation.lock) {
+                        screen.orientation.lock("landscape").catch(err => console.log("Orientation lock ignored:", err));
+                    }
+                    startStory()
+                }).catch(startStory());
+            }
+        } else {
+            startStory()
+        }
+    }
+
+    // Listen for when the user EXITS fullscreen (via back button or gesture)
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            // Return to cover when exiting landscape mode
+            currentSpread = 0;
+            updateDisplay();
+        }
+    });
+
     function nextPage() {
-        if (currentSpread < totalSpreads - 1) {
+        if (currentSpread === 0) {
+            openBook();
+        } else if (currentSpread < totalSpreads - 1) {
             currentSpread++;
+            lastSpread = currentSpread;
             updateDisplay();
         }
     }
@@ -470,26 +557,8 @@
     function prevPage() {
         if (currentSpread > 0) {
             currentSpread--;
+            lastSpread = currentSpread;
             updateDisplay();
-        }
-    }
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().then(() => {
-                // Attempt to lock orientation to landscape
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock("landscape").catch(err => {
-                        console.log("Orientation lock failed: ", err);
-                    });
-                }
-            }).catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message}`);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
         }
     }
 </script>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pebbles Meets a Friend</title>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Indie+Flower&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-color: #fdfaf3;
+            --ink-color: #33363d;
+            --font-handwritten: 'Coming Soon', cursive;
+        }
+
+        body {
+            background-color: #c5bbb1;
+            font-family: var(--font-handwritten);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink-color);
+            overflow: hidden;
+        }
+
+        .book-wrapper {
+            position: relative;
+            width: 1000px;
+            height: 700px;
+            perspective: 2000px;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .spread {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .spread.active { display: flex; }
+
+        .left-page, .right-page {
+            width: 50%;
+            /* padding: 60px; */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Gutter shadow for the book spine */
+        .left-page {
+            border-right: 1px solid rgba(0,0,0,0.1);
+            background-image: 
+                linear-gradient(to right, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
+                url('images/bg_l.png');
+            background-size: cover;
+        }
+        
+        .right-page {
+            background-image: 
+                linear-gradient(to left, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
+                url('images/bg_r.png');
+            background-size: cover;
+        }
+
+        /* Interactive Navigation Edges */
+        .nav-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 15%; /* Interactive area width */
+            z-index: 10;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-zone-left { left: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👈</text></svg>"), auto; }
+        .nav-zone-right { right: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👉</text></svg>"), auto; }
+
+        /* Subtle page curl shadow on hover */
+        .nav-zone-left:hover {
+            background: linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 100%);
+        }
+        .nav-zone-right:hover {
+            background: linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 100%);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            /* object-fit: contain; */
+            /* filter: sepia(0.2) contrast(1.1); */
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            line-height: 1.5;
+            white-space: pre-line;  
+            transform: rotate(-0.3deg);
+            margin: 60px;
+        }
+
+        /* Cover */
+        .cover {
+            cursor: pointer;
+            background: #5d4037;
+            color: #fdfaf3;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 12px solid #4e342e;
+        }
+        .cover h1 { font-size: 4.5rem; margin: 0; font-family: 'Indie Flower', cursive; }
+        .cover img { max-height: 30vh; width: unset !important; height: unset !important; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="book-wrapper">
+    <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()"></div>
+    
+    <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()"></div>
+
+    <div class="book" id="book-container">
+        
+        <div class="spread active cover" id="page-0" onclick="nextPage()">
+            <div style="padding: 40px;">
+                <h1>Pebbles Meets a Friend</h1>
+                <img src="images/pebbles_cover.png" alt="Pebbles Cover Art">
+                <p style="font-size: 1.2rem;">Original text and illustrations</p>
+                <p style="font-size: 2rem;">J. A. Puddephat</p>
+                <p style="font-size: 1.2rem;">Additional illustrations and colouration by Google Gemini</p>
+            </div>
+        </div>
+
+        <div class="spread" id="page-1">
+            <div class="left-page"><img src="images/the_nest.png"></div>
+            <div class="right-page">
+                <div class="text-content">
+                    One moonlit night Pebbles woke up early. His five big brothers and his five little sisters were still snoring peacefully. (Quite loudly in fact!). 
+
+                    Mum was already busy tidying the nest, so he said “Good evening Mama, I think I’ll go out on my own to-night, Dad said I was big enough now is that ok?” 
+
+                    “Of course”, said Mum, “You are a very sensible doormouse, off you go, but bring something tasty back for supper.”
+                </div>
+            </div>
+        </div>
+
+        <div class="spread" id="page-2">
+            <div class="left-page">
+                <div class="text-content">
+                    The moon was big and round like a golden plate in the sky and Pebbles could see thousands of stars twinkling down at him. He felt very grown up and important.
+    
+                    He made his way along the brambles and the hazel bushes ~ doormice don’t very often travel at ground level.
+                </div>
+            </div>
+            <div class="right-page">
+                <img src="images/the_moonlit_journey.png">
+            </div>
+        </div>
+
+        <div class="spread" id="page-3">
+            <div class="left-page"><img src="images/the_holly_berries.png"></div>
+            <div class="right-page">
+                <div class="text-content">
+                    He took a jump from the hazel into the holly bush and noticed that there were plenty of berries, he was glad because the blackbird had told him that the berries were good to eat in the winter when they turned red. 
+
+                    Pebbles had never seen them red because of course he always hibernated in the winter.
+
+                    He wriggled through the holly and over some more brambles then onto very tall grasses that Dad said were reeds.
+                </div>
+            </div>
+        </div>
+
+        <div class="spread" id="page-4">
+            <div class="left-page">
+                <div class="text-content">
+                    He soon reached the edge of the pond. 
+    
+                    Pebbles loved it here but he knew he had to be very careful. Pebbles held on tight to the reeds and looked across the pond.
+    
+                    Dad said it was like a mirror that humans use to look at themselves. 
+                </div>
+            </div>
+            <div class="right-page">
+                <img src="images/the_pond.png">
+            </div>
+        </div>
+
+        <div class="spread" id="page-5">
+            <div class="left-page"><img src="images/the_reflection.png"></div>
+            <div class="right-page">
+                <div class="text-content">
+                    Pebbles thought it very odd that they looked at themselves, but he did like to see the moon reflected in the water and the trees and leaves and . . . . but what was that? 
+
+                    Two huge eyes were looking up at Pebbles from a large lily pad ~ lily pads are large water lily leaves that float on top of the water.
+                </div>
+            </div>
+        </div>
+
+        <div class="spread" id="page-6">
+            <div class="left-page">
+                <div class="text-content">
+                    “Hi there” said a deep gruff voice, “fancy a game?”
+    
+                    “Oh, probably”, said Pebbles rather nervously, “but who are you?” 
+    
+                    “I’m Tad the frog, and I’m feeling a little lonely, how about a race?”
+    
+                    “A race, oh but I can’t run on the ground and certainly not in the water” said Pebbles.
+    
+                    “That’s ok”, said Tad, “I’ll hop across the pond on the lily pads and you can go over the bridge."
+                </div>
+            </div>
+            <div class="right-page">
+                <img src="images/tad.png">
+            </div>
+        </div>
+
+        <div class="spread" id="page-7">
+            <div class="left-page"><img src="images/on_your_marks.png"></div>
+            <div class="right-page">
+                <div class="text-content">
+                    "There's a big bush of bilberries on the other side I'll meet you there"
+
+                    Pebbles couldn’t see a bridge, but then in the light of the moon he saw a branch of a willow tree spanning the pond, this will be easy, he thought, he didn't know what a bilberry bush was but he didn't like to admit that. 
+                    
+                    “Ok”, said Pebbles, “I’ll have a go”.
+
+                    “Ready, steady, GO “ shouted Tad.
+                </div>
+            </div>
+        </div>
+
+        <div class="spread" id="page-8">
+            <div class="left-page">
+                <div class="text-content">
+                    Off they went, Tad had very strong back legs and leapt easily from pad to pad on the pond, but some were quite a long way apart so he had to do a detour.
+    
+                    Pebbles set off at a pace of lightening ~ doormice might sleep a lot but when the move they go very fast.
+    
+                    Over the branch he went, between the soft thin leaves, through the shadows of the big trees and out at the other side... plop!
+                </div>
+            </div>
+            <div class="right-page">
+                <img src="images/the_race.png">
+            </div>
+        </div>
+
+        <div class="spread" id="page-9">
+            <div class="left-page"><img src="images/the_bilberry_feast.png"></div>
+            <div class="right-page">
+                <div class="text-content">
+                    He fell off into a tickly green bush covered in juicy purple fruit. 
+                    
+                    Tad jumped in at the same moment + they squashed some of the sticky fruit and it trickled down their bodies making both of them a very funny colour.
+
+                    They laughed and laughed. When they had finished Pebbles licked his mouth ~ “Yummy” he said “these taste good!”
+                </div>
+            </div>
+        </div>
+
+        <div class="spread" id="page-10">
+            <div class="left-page">
+                <div class="text-content">
+                    When he was full he picked some more for supper. 
+                    
+                    “Race you back” yelled Tad. 
+                    
+                    “I won” said Tad ~ “I’ll win next time” said Pebbles with a grin. 
+    
+                    “Cheerio” and off he went with his bilberries.
+                </div>
+            </div>
+            <div class="right-page">
+                <img src="images/cheerio.png">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSpread = 0;
+    const totalSpreads = 11; 
+
+    function updateDisplay() {
+        const allSpreads = document.querySelectorAll('.spread');
+        allSpreads.forEach(s => s.classList.remove('active'));
+        document.getElementById(`page-${currentSpread}`).classList.add('active');
+
+        // Navigation Zones logic
+        const prevZone = document.getElementById('global-prev');
+        const nextZone = document.getElementById('global-next');
+
+        // Show Next zone unless on the last page
+        if (currentSpread < totalSpreads - 1) {
+            nextZone.classList.remove('hidden');
+        } else {
+            nextZone.classList.add('hidden');
+        }
+
+        // Show Prev zone only after the cover
+        if (currentSpread > 0) {
+            prevZone.classList.remove('hidden');
+        } else {
+            prevZone.classList.add('hidden');
+        }
+    }
+
+    function nextPage() {
+        if (currentSpread < totalSpreads - 1) {
+            currentSpread++;
+            updateDisplay();
+        }
+    }
+
+    function prevPage() {
+        if (currentSpread > 0) {
+            currentSpread--;
+            updateDisplay();
+        }
+    }
+</script>
+
+</body>
+</html>

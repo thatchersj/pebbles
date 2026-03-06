@@ -129,16 +129,148 @@
         }
         .cover h1 { font-size: 4.5rem; margin: 0; font-family: 'Indie Flower', cursive; }
         .cover img { max-height: 30vh; width: unset !important; height: unset !important; }
+        .cover-cap { font-size: 1.2rem; }
+        .cover-auth { font-size: 2em; }
 
         .hidden { display: none !important; }
+
+        /* Fullscreen Button Styles */
+        #fullscreen-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: sans-serif;
+        }
+
+        .glob-left, .glob-right { display: none; }
+        
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .book-wrapper {
+                width: 100%; /* Take up full width */
+                height: 100vh;
+                perspective: none; /* Perspective isn't needed for stacked pages */
+            }
+
+            .book {
+                margin: auto;
+                width: 35vh;
+                height: 100vh;
+
+            }
+
+            .cover {
+                width: unset;
+                border: unset;
+                border-radius: 0;
+            }
+
+            .spread.active {
+                flex-direction: column; /* Stack image and text */
+                overflow-y: auto; /* Allow scrolling if the story is long */
+            }
+
+            .left-page, .right-page {
+                width: 100%;
+                min-height: 50%;
+                border-right: none;
+            }
+
+            .text-content {
+                font-size: 1.1rem; /* Smaller font for mobile */
+                margin: 20px;
+            }
+
+            .nav-zone {
+                width: 35%; /* Larger tap targets for fingers */
+            }
+
+            .spread.cover img {
+                max-height: 40vh; /* Prevent cover image from blowing out the height */
+            }
+
+            .cover h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1em;
+            }
+            .cover p { margin-block: 1em; }
+            p.cover-cap { font-size: .75rem;  }
+            p.cover-auth { font-size: 1em; margin-bottom: 2em; }
+            #fullscreen-btn { display: block; }
+
+            .glob-left, .glob-right {
+                display: block;
+                width: 10%;
+                position: absolute;
+            }
+
+            .glob-left { left: 1em; }
+            .glob-right { right: 1em; }
+        }
+
+        /* Specific fix for Landscape Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .book-wrapper {
+                max-width: 140vh;
+                height: 100vh; /* Force it to fill the screen */
+            }
+
+            .book {
+                height: 100%;
+            }
+
+            .left-page, .right-page {
+                /* padding: 20px; /* Reduce padding to save space */
+                background-size: 100% 100%; /* Stretch background to fit page precisely */
+            }
+
+            .text-content {
+                font-size: 0.9rem; /* Shrink text so it doesn't overflow the page */
+                margin: 10px 30px;
+                line-height: 1.3;
+            }
+
+            .spread.cover img {
+                max-height: 40vh; /* Prevent cover image from blowing out the height */
+            }
+
+            .cover {
+                width: unset;
+                border: unset;
+                border-radius: 0;
+            }
+
+            .cover h1 {
+                font-size: 2.5rem;
+            }
+            .cover p { margin-block: 0.5em; }
+            p.cover-cap { font-size: .75rem;  }
+            p.cover-auth { font-size: 1em; margin-bottom: 1em; }
+            #fullscreen-btn { display: block; }
+        }
     </style>
 </head>
 <body>
 
+<button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+
 <div class="book-wrapper">
-    <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()"></div>
+    <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()">
+        <div class="glob-left">⏴</div>
+    </div>
     
-    <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()"></div>
+    <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()">
+        <div class="glob-right">⏵</div>
+    </div>
 
     <div class="book" id="book-container">
         
@@ -146,9 +278,9 @@
             <div style="padding: 40px;">
                 <h1>Pebbles Meets a Friend</h1>
                 <img src="images/pebbles_cover.png" alt="Pebbles Cover Art">
-                <p style="font-size: 1.2rem;">Original text and illustrations</p>
-                <p style="font-size: 2rem;">J. A. Puddephat</p>
-                <p style="font-size: 1.2rem;">Additional illustrations and colouration by Google Gemini</p>
+                <p class="cover-cap">Original text and illustrations</p>
+                <p class="cover-auth">J. A. Puddephat</p>
+                <p class="cover-cap">Additional illustrations and colouration by Google Gemini</p>
             </div>
         </div>
 
@@ -337,6 +469,25 @@
         if (currentSpread > 0) {
             currentSpread--;
             updateDisplay();
+        }
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then(() => {
+                // Attempt to lock orientation to landscape
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock("landscape").catch(err => {
+                        console.log("Orientation lock failed: ", err);
+                    });
+                }
+            }).catch(err => {
+                alert(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
         }
     }
 </script>

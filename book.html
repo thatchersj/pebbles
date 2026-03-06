@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pebbles Meets a Friend</title>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Indie+Flower&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-color: #fdfaf3;
+            --ink-color: #33363d;
+            --font-handwritten: 'Coming Soon', cursive;
+        }
+
+        body {
+            background-color: #c5bbb1;
+            font-family: var(--font-handwritten);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink-color);
+            overflow: hidden;
+        }
+
+        .book-wrapper {
+            position: relative;
+            width: 1000px;
+            height: 700px;
+            perspective: 2000px;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .spread {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .spread.active { display: flex; }
+
+        .left-page, .right-page {
+            width: 50%;
+            /* padding: 60px; */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Gutter shadow for the book spine */
+        .left-page {
+            border-right: 1px solid rgba(0,0,0,0.1);
+            background-image: 
+                linear-gradient(to right, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
+                url('images/bg_l.png');
+            background-size: cover;
+        }
+        
+        .right-page {
+            background-image: 
+                linear-gradient(to left, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
+                url('images/bg_r.png');
+            background-size: cover;
+        }
+
+        /* Interactive Navigation Edges */
+        .nav-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 15%; /* Interactive area width */
+            z-index: 10;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-zone-left { left: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👈</text></svg>"), auto; }
+        .nav-zone-right { right: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👉</text></svg>"), auto; }
+
+        /* Subtle page curl shadow on hover */
+        .nav-zone-left:hover {
+            background: linear-gradient(to right, rgba(244, 213, 144, 0.5)0%, transparent 100%);
+        }
+        .nav-zone-right:hover {
+            background: linear-gradient(to left, rgba(244, 213, 144, 0.5) 0%, transparent 100%);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            /* object-fit: contain; */
+            /* filter: sepia(0.2) contrast(1.1); */
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            line-height: 1.5;
+            white-space: pre-line;  
+            transform: rotate(-0.3deg);
+            margin: 60px;
+        }
+
+        /* Cover */
+        .cover {
+            cursor: pointer;
+            background: #5d4037;
+            color: #fdfaf3;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 12px solid #4e342e;
+        }
+        .cover h1 { font-size: 4.5rem; margin: 0; font-family: 'Indie Flower', cursive; }
+        .cover img { max-height: 30vh; width: unset !important; height: unset !important; }
+        .cover-cap { font-size: 1.2rem; }
+        .cover-auth { font-size: 2em; }
+
+        .hidden { display: none !important; }
+        
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .book-wrapper {
+                width: 100%; /* Take up full width */
+                height: 100vh;
+                perspective: none; /* Perspective isn't needed for stacked pages */
+            }
+
+            .book {
+                margin: auto;
+                /* width: 35vh; */
+                height: 100vh;
+
+            }
+
+            .cover {
+                width: unset;
+                border: unset;
+                border-radius: 0;
+            }
+
+            .spread.active {
+                flex-direction: column; /* Stack image and text */
+                overflow-y: auto; /* Allow scrolling if the story is long */
+            }
+
+            .left-page, .right-page {
+                width: 100%;
+                min-height: 50%;
+                border-right: none;
+            }
+
+            .text-content {
+                font-size: 1.1rem; /* Smaller font for mobile */
+                margin: 20px;
+            }
+
+            .nav-zone {
+                width: 35%; /* Larger tap targets for fingers */
+            }
+
+            .spread.cover img {
+                max-height: 40vh; /* Prevent cover image from blowing out the height */
+            }
+
+            .cover h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1em;
+            }
+            .cover p { margin-block: 1em; }
+            p.cover-cap { font-size: .75rem;  }
+            p.cover-auth { font-size: 1em; margin-bottom: 2em; }
+            #fullscreen-btn { display: block; }
+        }
+
+        /* Specific fix for Landscape Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .book-wrapper {
+                max-width: 140vh;
+                height: 100vh; /* Force it to fill the screen */
+            }
+
+            .book {
+                height: 100%;
+            }
+
+            .left-page, .right-page {
+                /* padding: 20px; /* Reduce padding to save space */
+                background-size: 100% 100%; /* Stretch background to fit page precisely */
+            }
+
+            .text-content {
+                font-size: 0.9rem; /* Shrink text so it doesn't overflow the page */
+                margin: 10px 30px;
+                line-height: 1.3;
+            }
+
+            .spread.cover img {
+                max-height: 40vh; /* Prevent cover image from blowing out the height */
+            }
+
+            .cover {
+                width: unset;
+                border: unset;
+                border-radius: 0;
+            }
+
+            .cover h1 {
+                font-size: 2.5rem;
+            }
+            .cover p { margin-block: 0.5em; }
+            p.cover-cap { font-size: .75rem;  }
+            p.cover-auth { font-size: 1em; margin-bottom: 1em; }
+            #fullscreen-btn { display: block; }
+        }
+
+        /* Guide Overlay Styles */
+        #guide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+
+        .guide-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .guide-content {
+            position: relative;
+            width: 95%;
+            height: 60%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .guide-hand {
+            font-size: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        .guide-hand span {
+            font-size: 1rem;
+            margin-top: 10px;
+            font-family: sans-serif;
+        }
+
+        .guide-close {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 25px;
+            background: #fdfaf3;
+            color: #333;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001; /* Above everything */
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            transition: opacity 0.3s;
+        }
+
+        /* Hide the home button when the book is open to keep it immersive */
+        .story-active .home-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" id="library-home" class="home-btn">🏠 Back to Library</a>
+    <div class="book-wrapper">
+
+        
+        <div id="guide-overlay" class="guide-hidden" onclick="dismissGuide()">
+            <div class="guide-content">
+                <div class="guide-hand left"><span>Tap to go back</span>👈</div>
+                <div class="guide-hand right">👉<span>Tap to go forward</span></div>
+                <button class="guide-close">Got it!</button>
+            </div>
+        </div>
+
+        <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()"></div>
+        <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()"></div>
+        
+        <div class="book" id="book-container">
+            <div class="spread active cover">
+                <div style="padding: 40px;">
+                    <h1>Loading Story...</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let currentSpread = 0;
+    let totalSpreads = 0;
+    let guideShown = false;
+
+    // 1. Fetch the config and build the book
+    async function loadBook() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookFile = urlParams.get('book') || 'pebbles.json'; // Default to pebbles
+
+        try {
+            const response = await fetch(bookFile);
+            const config = await response.json();
+            renderBook(config);
+        } catch (err) {
+            console.error("Failed to load book config:", err);
+        }
+    }
+
+    function renderBook(config) {
+        const container = document.getElementById('book-container');
+        container.innerHTML = ''; // Clear existing
+
+        // Build Cover (Page 0)
+        const coverHtml = `
+            <div class="spread active cover" id="page-0" onclick="openBook()">
+                <div style="padding: 40px;">
+                    <h1>${config.title}</h1>
+                    <img src="${config.coverImage}" alt="Cover Art">
+                    <p class="cover-cap">${config.credits.join('<br>')}</p>
+                    <p class="cover-cap"><small>(Click to enter)</small></p>
+                </div>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', coverHtml);
+
+        // Build Spreads
+        config.spreads.forEach((spread, index) => {
+            const id = index + 1;
+            const spreadDiv = document.createElement('div');
+            spreadDiv.className = 'spread';
+            spreadDiv.id = `page-${id}`;
+
+            const leftContent = renderHalf(spread.left);
+            const rightContent = renderHalf(spread.right);
+
+            spreadDiv.innerHTML = `
+                <div class="left-page">${leftContent}</div>
+                <div class="right-page">${rightContent}</div>
+            `;
+            container.appendChild(spreadDiv);
+        });
+
+        totalSpreads = config.spreads.length + 1;
+    }
+
+    function renderHalf(side) {
+        if (side.type === 'image') {
+            return `<img src="${side.content}">`;
+        } else {
+            return `<div class="text-content">${side.content}</div>`;
+        }
+    }
+
+    // Initialize
+    loadBook();
+
+    function updateDisplay() {
+        const allSpreads = document.querySelectorAll('.spread');
+        allSpreads.forEach(s => s.classList.remove('active'));
+        document.getElementById(`page-${currentSpread}`).classList.add('active');
+
+        // Navigation Zones
+        const prevZone = document.getElementById('global-prev');
+        const nextZone = document.getElementById('global-next');
+
+        if (currentSpread < totalSpreads - 1 & currentSpread > 0) {
+            nextZone.classList.remove('hidden');
+        } else {
+            nextZone.classList.add('hidden');
+        }
+
+        if (currentSpread > 0) {
+            prevZone.classList.remove('hidden');
+        } else {
+            prevZone.classList.add('hidden');
+        }
+    }
+
+    // THE KEY CHANGE: Opening the book triggers Fullscreen Landscape
+    function dismissGuide() {
+        document.getElementById('guide-overlay').classList.add('guide-hidden');
+    }
+
+    function openBook() {
+        const startStory = () => {
+            currentSpread = 1;
+            updateDisplay();
+            
+            // Show the guide only the first time they enter the story
+            if (!guideShown) {
+                document.getElementById('guide-overlay').classList.remove('guide-hidden');
+                guideShown = true;
+                // Auto-hide after 4 seconds if they don't click
+                setTimeout(dismissGuide, 4000);
+            }
+        };
+
+        // Only attempt fullscreen/landscape if on mobile
+        if (window.innerWidth <= 768) {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    if (screen.orientation && screen.orientation.lock) {
+                        screen.orientation.lock("landscape").catch(err => console.log("Orientation lock ignored:", err));
+                    }
+                    startStory()
+                }).catch(startStory());
+            }
+        } else {
+            startStory()
+        }
+    }
+
+    // Listen for when the user EXITS fullscreen (via back button or gesture)
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            // Return to cover when exiting landscape mode
+            currentSpread = 0;
+            updateDisplay();
+        }
+    });
+
+    function nextPage() {
+        if (currentSpread === 0) {
+            openBook();
+        } else if (currentSpread < totalSpreads - 1) {
+            currentSpread++;
+            lastSpread = currentSpread;
+            updateDisplay();
+        }
+    }
+
+    function prevPage() {
+        if (currentSpread > 0) {
+            currentSpread--;
+            lastSpread = currentSpread;
+            updateDisplay();
+        }
+    }
+</script>
+
+</body>
+</html>

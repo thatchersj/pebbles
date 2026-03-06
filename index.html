@@ -3,565 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pebbles Meets a Friend</title>
-    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Indie+Flower&display=swap" rel="stylesheet">
-    
+    <title>Pebbles' Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --paper-color: #fdfaf3;
-            --ink-color: #33363d;
-            --font-handwritten: 'Coming Soon', cursive;
-        }
-
         body {
             background-color: #c5bbb1;
-            font-family: var(--font-handwritten);
+            font-family: 'Indie Flower', cursive;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            padding: 50px;
             margin: 0;
-            color: var(--ink-color);
-            overflow: hidden;
         }
-
-        .book-wrapper {
-            position: relative;
-            width: 1000px;
-            height: 700px;
-            perspective: 2000px;
-        }
-
-        .book {
-            position: relative;
+        h1 { font-size: 3.5rem; color: #4e342e; margin-bottom: 40px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 40px;
             width: 100%;
-            height: 100%;
-            transition: transform 0.6s ease;
+            max-width: 1000px;
         }
-
-        .spread {
-            display: none;
-            width: 100%;
-            height: 100%;
-            background: var(--paper-color);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .spread.active { display: flex; }
-
-        .left-page, .right-page {
-            width: 50%;
-            /* padding: 60px; */
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-        }
-
-        /* Gutter shadow for the book spine */
-        .left-page {
-            border-right: 1px solid rgba(0,0,0,0.1);
-            background-image: 
-                linear-gradient(to right, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
-                url('images/bg_l.png');
-            background-size: cover;
-        }
-        
-        .right-page {
-            background-image: 
-                linear-gradient(to left, rgba(232, 228, 216, 0.8) 0%, rgba(245, 245, 220, 0) 10%), 
-                url('images/bg_r.png');
-            background-size: cover;
-        }
-
-        /* Interactive Navigation Edges */
-        .nav-zone {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 15%; /* Interactive area width */
-            z-index: 10;
-            transition: background 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-zone-left { left: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👈</text></svg>"), auto; }
-        .nav-zone-right { right: 0; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size: 24px;'><text y='20'>👉</text></svg>"), auto; }
-
-        /* Subtle page curl shadow on hover */
-        .nav-zone-left:hover {
-            background: linear-gradient(to right, rgba(244, 213, 144, 0.5)0%, transparent 100%);
-        }
-        .nav-zone-right:hover {
-            background: linear-gradient(to left, rgba(244, 213, 144, 0.5) 0%, transparent 100%);
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-            /* object-fit: contain; */
-            /* filter: sepia(0.2) contrast(1.1); */
-        }
-
-        .text-content {
-            font-size: 1.4rem;
-            line-height: 1.5;
-            white-space: pre-line;  
-            transform: rotate(-0.3deg);
-            margin: 60px;
-        }
-
-        /* Cover */
-        .cover {
-            cursor: pointer;
+        .book-card {
             background: #5d4037;
-            color: #fdfaf3;
-            justify-content: center;
-            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             text-align: center;
-            border: 12px solid #4e342e;
-        }
-        .cover h1 { font-size: 4.5rem; margin: 0; font-family: 'Indie Flower', cursive; }
-        .cover img { max-height: 30vh; width: unset !important; height: unset !important; }
-        .cover-cap { font-size: 1.2rem; }
-        .cover-auth { font-size: 2em; }
-
-        .hidden { display: none !important; }
-        
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .book-wrapper {
-                width: 100%; /* Take up full width */
-                height: 100vh;
-                perspective: none; /* Perspective isn't needed for stacked pages */
-            }
-
-            .book {
-                margin: auto;
-                /* width: 35vh; */
-                height: 100vh;
-
-            }
-
-            .cover {
-                width: unset;
-                border: unset;
-                border-radius: 0;
-            }
-
-            .spread.active {
-                flex-direction: column; /* Stack image and text */
-                overflow-y: auto; /* Allow scrolling if the story is long */
-            }
-
-            .left-page, .right-page {
-                width: 100%;
-                min-height: 50%;
-                border-right: none;
-            }
-
-            .text-content {
-                font-size: 1.1rem; /* Smaller font for mobile */
-                margin: 20px;
-            }
-
-            .nav-zone {
-                width: 35%; /* Larger tap targets for fingers */
-            }
-
-            .spread.cover img {
-                max-height: 40vh; /* Prevent cover image from blowing out the height */
-            }
-
-            .cover h1 {
-                font-size: 2.5rem;
-                margin-bottom: 1em;
-            }
-            .cover p { margin-block: 1em; }
-            p.cover-cap { font-size: .75rem;  }
-            p.cover-auth { font-size: 1em; margin-bottom: 2em; }
-            #fullscreen-btn { display: block; }
-        }
-
-        /* Specific fix for Landscape Mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .book-wrapper {
-                max-width: 140vh;
-                height: 100vh; /* Force it to fill the screen */
-            }
-
-            .book {
-                height: 100%;
-            }
-
-            .left-page, .right-page {
-                /* padding: 20px; /* Reduce padding to save space */
-                background-size: 100% 100%; /* Stretch background to fit page precisely */
-            }
-
-            .text-content {
-                font-size: 0.9rem; /* Shrink text so it doesn't overflow the page */
-                margin: 10px 30px;
-                line-height: 1.3;
-            }
-
-            .spread.cover img {
-                max-height: 40vh; /* Prevent cover image from blowing out the height */
-            }
-
-            .cover {
-                width: unset;
-                border: unset;
-                border-radius: 0;
-            }
-
-            .cover h1 {
-                font-size: 2.5rem;
-            }
-            .cover p { margin-block: 0.5em; }
-            p.cover-cap { font-size: .75rem;  }
-            p.cover-auth { font-size: 1em; margin-bottom: 1em; }
-            #fullscreen-btn { display: block; }
-        }
-
-        /* Guide Overlay Styles */
-        #guide-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            transition: opacity 0.5s ease;
-        }
-
-        .guide-hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .guide-content {
-            position: relative;
-            width: 95%;
-            height: 60%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .guide-hand {
-            font-size: 3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: pulse 1.5s infinite;
-        }
-
-        .guide-hand span {
-            font-size: 1rem;
-            margin-top: 10px;
-            font-family: sans-serif;
-        }
-
-        .guide-close {
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 25px;
-            background: #fdfaf3;
-            color: #333;
-            border: none;
-            border-radius: 20px;
+            transition: transform 0.3s ease;
             cursor: pointer;
-            font-weight: bold;
+            text-decoration: none;
+            color: #fdfaf3;
         }
+        .book-card:hover { transform: translateY(-10px); }
+        .book-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .book-card h2 { margin: 10px 0; font-size: 1.8rem; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        /* Landscape Mobile Fix for Library */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 20px; /* Reduce padding to save space */
+            }
+
+            h1 {
+                font-size: 2rem; /* Shrink title */
+                margin-bottom: 20px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(180px, 1fr)); /* More, smaller columns */
+                gap: 20px;
+            }
+
+            .book-card {
+                padding: 10px;
+                display: flex; /* Switch to horizontal card layout */
+                align-items: center;
+                text-align: left;
+            }
+
+            .book-card img {
+                height: 120px; /* Much smaller height for landscape */
+                width: 90px;   /* Fixed width to keep it consistent */
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
+
+            .book-card h2 {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+
+            .book-card p {
+                font-size: 0.9rem;
+                margin: 5px 0 0 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="book-wrapper">
-        <div id="guide-overlay" class="guide-hidden" onclick="dismissGuide()">
-            <div class="guide-content">
-                <div class="guide-hand left"><span>Tap to go back</span>👈</div>
-                <div class="guide-hand right">👉<span>Tap to go forward</span></div>
-                <button class="guide-close">Got it!</button>
-            </div>
-        </div>
-
-        <div id="global-prev" class="nav-zone nav-zone-left hidden" onclick="prevPage()">
-        </div>
-        
-        <div id="global-next" class="nav-zone nav-zone-right hidden" onclick="nextPage()">
-        </div>
-        
-        <div class="book" id="book-container">
-            
-        <div class="spread active cover" id="page-0" onclick="openBook()">
-            <div style="padding: 40px;">
-                <h1>Pebbles Meets a Friend</h1>
-                <img src="images/pebbles_cover.png" alt="Pebbles Cover Art">
-                <p class="cover-cap">Original text and illustrations <br> <span class="cover-auth">J. A. Puddephat</span></p>
-                
-                <p class="cover-cap">Additional illustrations and colouration <br> Google Gemini</p>
-
-                <p class="cover-cap"><small>(Click to enter)</small></p>
-            </div>
-        </div>
-
-        <div class="spread" id="page-1">
-            <div class="left-page"><img src="images/the_nest.png"></div>
-            <div class="right-page">
-                <div class="text-content">
-                    One moonlit night Pebbles woke up early. His five big brothers and his five little sisters were still snoring peacefully. (Quite loudly in fact!). 
-
-                    Mum was already busy tidying the nest, so he said “Good evening Mama, I think I’ll go out on my own to-night, Dad said I was big enough now is that ok?” 
-
-                    “Of course”, said Mum, “You are a very sensible doormouse, off you go, but bring something tasty back for supper.”
-                </div>
-            </div>
-        </div>
-
-        <div class="spread" id="page-2">
-            <div class="left-page">
-                <div class="text-content">
-                    The moon was big and round like a golden plate in the sky and Pebbles could see thousands of stars twinkling down at him. He felt very grown up and important.
-    
-                    He made his way along the brambles and the hazel bushes ~ doormice don’t very often travel at ground level.
-                </div>
-            </div>
-            <div class="right-page">
-                <img src="images/the_moonlit_journey.png">
-            </div>
-        </div>
-
-        <div class="spread" id="page-3">
-            <div class="left-page"><img src="images/the_holly_berries.png"></div>
-            <div class="right-page">
-                <div class="text-content">
-                    He took a jump from the hazel into the holly bush and noticed that there were plenty of berries, he was glad because the blackbird had told him that the berries were good to eat in the winter when they turned red. 
-
-                    Pebbles had never seen them red because of course he always hibernated in the winter.
-
-                    He wriggled through the holly and over some more brambles then onto very tall grasses that Dad said were reeds.
-                </div>
-            </div>
-        </div>
-
-        <div class="spread" id="page-4">
-            <div class="left-page">
-                <div class="text-content">
-                    He soon reached the edge of the pond. 
-    
-                    Pebbles loved it here but he knew he had to be very careful. Pebbles held on tight to the reeds and looked across the pond.
-    
-                    Dad said it was like a mirror that humans use to look at themselves. 
-                </div>
-            </div>
-            <div class="right-page">
-                <img src="images/the_pond.png">
-            </div>
-        </div>
-
-        <div class="spread" id="page-5">
-            <div class="left-page"><img src="images/the_reflection.png"></div>
-            <div class="right-page">
-                <div class="text-content">
-                    Pebbles thought it very odd that they looked at themselves, but he did like to see the moon reflected in the water and the trees and leaves and . . . . but what was that? 
-
-                    Two huge eyes were looking up at Pebbles from a large lily pad ~ lily pads are large water lily leaves that float on top of the water.
-                </div>
-            </div>
-        </div>
-
-        <div class="spread" id="page-6">
-            <div class="left-page">
-                <div class="text-content">
-                    “Hi there” said a deep gruff voice, “fancy a game?”
-    
-                    “Oh, probably”, said Pebbles rather nervously, “but who are you?” 
-    
-                    “I’m Tad the frog, and I’m feeling a little lonely, how about a race?”
-    
-                    “A race, oh but I can’t run on the ground and certainly not in the water” said Pebbles.
-    
-                    “That’s ok”, said Tad, “I’ll hop across the pond on the lily pads and you can go over the bridge."
-                </div>
-            </div>
-            <div class="right-page">
-                <img src="images/tad.png">
-            </div>
-        </div>
-
-        <div class="spread" id="page-7">
-            <div class="left-page"><img src="images/on_your_marks.png"></div>
-            <div class="right-page">
-                <div class="text-content">
-                    "There's a big bush of bilberries on the other side I'll meet you there"
-
-                    Pebbles couldn’t see a bridge, but then in the light of the moon he saw a branch of a willow tree spanning the pond, this will be easy, he thought, he didn't know what a bilberry bush was but he didn't like to admit that. 
-                    
-                    “Ok”, said Pebbles, “I’ll have a go”.
-
-                    “Ready, steady, GO “ shouted Tad.
-                </div>
-            </div>
-        </div>
-
-        <div class="spread" id="page-8">
-            <div class="left-page">
-                <div class="text-content">
-                    Off they went, Tad had very strong back legs and leapt easily from pad to pad on the pond, but some were quite a long way apart so he had to do a detour.
-    
-                    Pebbles set off at a pace of lightening ~ doormice might sleep a lot but when the move they go very fast.
-    
-                    Over the branch he went, between the soft thin leaves, through the shadows of the big trees and out at the other side... plop!
-                </div>
-            </div>
-            <div class="right-page">
-                <img src="images/the_race.png">
-            </div>
-        </div>
-
-        <div class="spread" id="page-9">
-            <div class="left-page"><img src="images/the_bilberry_feast.png"></div>
-            <div class="right-page">
-                <div class="text-content">
-                    He fell off into a tickly green bush covered in juicy purple fruit. 
-                    
-                    Tad jumped in at the same moment + they squashed some of the sticky fruit and it trickled down their bodies making both of them a very funny colour.
-
-                    They laughed and laughed. When they had finished Pebbles licked his mouth ~ “Yummy” he said “these taste good!”
-                </div>
-            </div>
-        </div>
-
-        <div class="spread" id="page-10">
-            <div class="left-page">
-                <div class="text-content">
-                    When he was full he picked some more for supper. 
-                    
-                    “Race you back” yelled Tad. 
-                    
-                    “I won” said Tad ~ “I’ll win next time” said Pebbles with a grin. 
-    
-                    “Cheerio” and off he went with his bilberries.
-                </div>
-            </div>
-            <div class="right-page">
-                <img src="images/cheerio.png">
-            </div>
-        </div>
+    <h1>My Storybook Library</h1>
+    <div class="grid" id="library-grid">
     </div>
-</div>
 
-<script>
-    let currentSpread = 0;
-    let lastSpread = 1;
-    const totalSpreads = 11; 
+    <script>
+    async function initLibrary() {
+        const grid = document.getElementById('library-grid');
+        
+        try {
+            // 1. Fetch the master list of books
+            const manifestResponse = await fetch('books/index.json');
+            const manifest = await manifestResponse.json();
 
-    function updateDisplay() {
-        const allSpreads = document.querySelectorAll('.spread');
-        allSpreads.forEach(s => s.classList.remove('active'));
-        document.getElementById(`page-${currentSpread}`).classList.add('active');
-
-        // Navigation Zones
-        const prevZone = document.getElementById('global-prev');
-        const nextZone = document.getElementById('global-next');
-
-        if (currentSpread < totalSpreads - 1 & currentSpread > 0) {
-            nextZone.classList.remove('hidden');
-        } else {
-            nextZone.classList.add('hidden');
-        }
-
-        if (currentSpread > 0) {
-            prevZone.classList.remove('hidden');
-        } else {
-            prevZone.classList.add('hidden');
-        }
-    }
-
-    // THE KEY CHANGE: Opening the book triggers Fullscreen Landscape
-    let guideShown = false;
-
-    function dismissGuide() {
-        document.getElementById('guide-overlay').classList.add('guide-hidden');
-    }
-
-    function openBook() {
-        const startStory = () => {
-            currentSpread = 1;
-            updateDisplay();
-            
-            // Show the guide only the first time they enter the story
-            if (!guideShown) {
-                document.getElementById('guide-overlay').classList.remove('guide-hidden');
-                guideShown = true;
-                // Auto-hide after 4 seconds if they don't click
-                setTimeout(dismissGuide, 4000);
+            // 2. Load Real Books
+            for (const bookFileName of manifest.availableBooks) {
+                const bookResponse = await fetch(`books/${bookFileName}`);
+                const bookData = await bookResponse.json();
+                
+                grid.innerHTML += `
+                    <a href="book.html?book=books/${bookFileName}" class="book-card">
+                        <img src="${bookData.coverImage}" alt="${bookData.title}">
+                        <div><h2>${bookData.title}</h2>
+                        <p>${bookData.author}</p></div>
+                    </a>`;
             }
-        };
 
-        // Only attempt fullscreen/landscape if on mobile
-        if (window.innerWidth <= 768) {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().then(() => {
-                    if (screen.orientation && screen.orientation.lock) {
-                        screen.orientation.lock("landscape").catch(err => console.log("Orientation lock ignored:", err));
-                    }
-                    startStory()
-                }).catch(startStory());
-            }
-        } else {
-            startStory()
+            // 3. Load Placeholder Books
+            manifest.placeholders.forEach(placeholder => {
+                grid.innerHTML += `
+                    <div class="book-card placeholder">
+                        <img src="${placeholder.coverImage}" alt="${placeholder.title}" style="filter: grayscale(0.5);">
+                        <h2>${placeholder.title}</h2>
+                        <p>${placeholder.status}</p>
+                    </div>`;
+            });
+
+        } catch (err) {
+            console.error("Library failed to load:", err);
         }
     }
 
-    // Listen for when the user EXITS fullscreen (via back button or gesture)
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
-            // Return to cover when exiting landscape mode
-            currentSpread = 0;
-            updateDisplay();
-        }
-    });
-
-    function nextPage() {
-        if (currentSpread === 0) {
-            openBook();
-        } else if (currentSpread < totalSpreads - 1) {
-            currentSpread++;
-            lastSpread = currentSpread;
-            updateDisplay();
-        }
-    }
-
-    function prevPage() {
-        if (currentSpread > 0) {
-            currentSpread--;
-            lastSpread = currentSpread;
-            updateDisplay();
-        }
-    }
-</script>
-
+    initLibrary();
+    </script>
 </body>
 </html>

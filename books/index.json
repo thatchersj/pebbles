@@ -1,0 +1,13 @@
+{
+  "availableBooks": [
+    "pebblesMeetsAFriend.json"
+  ],
+  "placeholders": [
+    {
+      "title": "A New Adventure",
+      "author": "",
+      "coverImage": "images/placeholder_cover.png",
+      "status": "Coming Soon?"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "bookId": "pebbles-01",
+  "title": "Pebbles Meets a Friend",
+  "author": "J. A. Puddephat",
+  "coverImage": "images/pebblesMeetsAFriend/pebbles_cover.png",
+  "credits": [
+    "Original text and illustrations by J. A. Puddephat",
+    "Additional illustrations and colouration by Google Gemini"
+  ],
+  "spreads": [
+    {
+        "left": { "type": "image", "content": "images/pebblesMeetsAFriend/the_nest.png"},
+        "right": { "type": "text", "content": "One moonlit night Pebbles woke up early. His five big brothers and his five little sisters were still snoring peacefully. (Quite loudly in fact!). \n\n Mum was already busy tidying the nest, so he said “Good evening Mama, I think I’ll go out on my own to-night, Dad said I was big enough now is that ok?” \n\n “Of course”, said Mum, “You are a very sensible doormouse, off you go, but bring something tasty back for supper.”"}
+    },    
+    {
+        "left": { "type": "text", "content": "The moon was big and round like a golden plate in the sky and Pebbles could see thousands of stars twinkling down at him. He felt very grown up and important. \n\n He made his way along the brambles and the hazel bushes ~ doormice don’t very often travel at ground level."},
+        "right": { "type": "image", "content": "images/pebblesMeetsAFriend/the_moonlit_journey.png"}
+    },  
+    {
+        "left": { "type": "image", "content": "images/pebblesMeetsAFriend/the_holly_berries.png"},
+        "right": { "type": "text", "content": "He took a jump from the hazel into the holly bush and noticed that there were plenty of berries, he was glad because the blackbird had told him that the berries were good to eat in the winter when they turned red. \n\n Pebbles had never seen them red because of course he always hibernated in the winter.\n\n He wriggled through the holly and over some more brambles then onto very tall grasses that Dad said were reeds."}
+    }, 
+    {
+        "left": { "type": "text", "content": "He soon reached the edge of the pond. \n\n Pebbles loved it here but he knew he had to be very careful. Pebbles held on tight to the reeds and looked across the pond. \n\n Dad said it was like a mirror that humans use to look at themselves. "},
+        "right": { "type": "image", "content": "images/pebblesMeetsAFriend/the_pond.png"}
+    },
+    {
+        "left": { "type": "image", "content": "images/pebblesMeetsAFriend/the_reflection.png"},
+        "right": { "type": "text", "content": "Pebbles thought it very odd that they looked at themselves, but he did like to see the moon reflected in the water and the trees and leaves and . . . . but what was that? \n\n Two huge eyes were looking up at Pebbles from a large lily pad ~ lily pads are large water lily leaves that float on top of the water."}
+    },
+    {
+        "left": { "type": "text", "content": "“Hi there” said a deep gruff voice, “fancy a game?” \n\n “Oh, probably”, said Pebbles rather nervously, “but who are you?” \n\n “I’m Tad the frog, and I’m feeling a little lonely, how about a race?” \n\n “A race, oh but I can’t run on the ground and certainly not in the water” said Pebbles. \n\n “That’s ok”, said Tad, “I’ll hop across the pond on the lily pads and you can go over the bridge.”"},
+        "right": { "type": "image", "content": "images/pebblesMeetsAFriend/tad.png"}
+    },
+    {
+        "left": { "type": "image", "content": "images/pebblesMeetsAFriend/on_your_marks.png" },
+        "right": { "type": "text", "content": "\"There's a big bush of bilberries on the other side I'll meet you there\" \n\n Pebbles couldn’t see a bridge, but then in the light of the moon he saw a branch of a willow tree spanning the pond, this will be easy, he thought, he didn't know what a bilberry bush was but he didn't like to admit that. \n\n “Ok”, said Pebbles, “I’ll have a go”. \n\n “Ready, steady, GO “ shouted Tad."}
+    },
+    {   
+      "left": { "type": "text", "content": "Off they went, Tad had very strong back legs and leapt easily from pad to pad on the pond, but some were quite a long way apart so he had to do a detour. \n\n Pebbles set off at a pace of lightening ~ doormice might sleep a lot but when the move they go very fast. \n\n Over the branch he went, between the soft thin leaves, through the shadows of the big trees and out at the other side... plop!"},
+      "right": { "type": "image", "content": "images/pebblesMeetsAFriend/the_race.png"}
+    },  
+    {
+      "left": { "type": "image", "content": "images/pebblesMeetsAFriend/the_bilberry_feast.png" },
+      "right": { "type": "text", "content": "He fell off into a tickly green bush covered in juicy purple fruit. \n\n Tad jumped in at the same moment + they squashed some of the sticky fruit and it trickled down their bodies making both of them a very funny colour. \n\n They laughed and laughed. When they had finished Pebbles licked his mouth ~ “Yummy” he said “these taste good!”"}
+    },
+    {
+      "left": { "type": "text", "content": "When he was full he picked some more for supper. \n\n “Race you back” yelled Tad. \n\n “I won” said Tad ~ “I’ll win next time” said Pebbles with a grin. \n\n “Cheerio” and off he went with his bilberries."},
+      "right": { "type": "image", "content": "images/pebblesMeetsAFriend/cheerio.png"}
+    }
+  ]
+}
+
+
+
+                    
+            

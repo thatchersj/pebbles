@@ -2,7 +2,7 @@
   "bookId": "pebbles-02",
   "title": "Pebbles and the Autumn Treasure",
   "author": "Inspired by J. A. Puddephat",
-  "coverImage": "images/pebblesAutumn/pebbles_autumn_cover.png",
+  "coverImage": "images/autumn Treasure/autumn_treasure.png",
   "credits": [
     "Original character by J. A. Puddephat",
     "Story and image descriptions by Gemini"
@@ -11,7 +11,7 @@
     {
       "left": {
         "type": "image",
-        "content": "Description: Pebbles sitting on a high branch, looking at the forest turning orange and gold. The sun is setting, casting long shadows."
+        "content": images/autumn Treasure/forest.png"
       },
       "right": {
         "type": "text",
@@ -25,13 +25,13 @@
       },
       "right": {
         "type": "image",
-        "content": "Description: Pebbles climbing down a thick, textured tree trunk towards a patch of bright green moss. Small red toadstools are growing at the base of the tree."
+        "content": "images/autumn Treasure/down_the_tree.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "Description: Pebbles encountering a large, fluffy white owl feather caught in a bramble bush. The thorns look sharp but the feather looks incredibly soft."
+        "content": "images/autumn Treasure/treasure.png."
       },
       "right": {
         "type": "text",
@@ -45,13 +45,13 @@
       },
       "right": {
         "type": "image",
-        "content": "Description: Pebbles mid-tumble into a pile of oak leaves. In front of him, the back of a large, red squirrel is visible."
+        "content": "images/autumn Treasure/oops.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "Description: Pebbles looking up at a Red Squirrel named Sammy. Sammy is holding the white feather in his paws and looking curious."
+        "content": "images/autumn Treasure/looking_for_this.png"
       },
       "right": {
         "type": "text",
@@ -65,13 +65,13 @@
       },
       "right": {
         "type": "image",
-        "content": "Description: Pebbles and Sammy the Squirrel searching through autumn leaves near an old, moss-covered stone wall."
+        "content": "images/autumn Treasure/searching.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "Description: Pebbles pointing at a specific spot under a yellow leaf where a large acorn is peeking out of the soil."
+        "content": "images/autumn Treasure/found_it.png"
       },
       "right": {
         "type": "text",
@@ -85,13 +85,13 @@
       },
       "right": {
         "type": "image",
-        "content": "Description: Pebbles struggling to carry the large white feather over a log. The moon is high and the stars are twinkling, matching the style of the first book."
+        "content": "images/autumn Treasure/homeward_bound.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "Description: The whole dormouse family huddled together in a very fluffy nest. The white feather is draped over them like a communal blanket."
+        "content": "images/autumn Treasure/the_nest.png"
       },
       "right": {
         "type": "text",
@@ -105,7 +105,7 @@
       },
       "right": {
         "type": "image",
-        "content": "Description: A final close-up of Pebbles’ face, fast asleep and smiling, tucked under a white feather. 'The End' is written in small, elegant letters."
+        "content": "images/autumn Treasure/snug.png"
       }
     }
   ]

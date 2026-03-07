@@ -350,7 +350,7 @@
     // 1. Fetch the config and build the book
     async function loadBook() {
         const urlParams = new URLSearchParams(window.location.search);
-        const bookFile = urlParams.get('book') || 'pebbles.json'; // Default to pebbles
+        const bookFile = urlParams.get('book') || 'books/pebblesAutumnTreasure.json'; // Default to pebbles
 
         try {
             const response = await fetch(bookFile);

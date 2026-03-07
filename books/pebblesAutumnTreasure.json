@@ -11,7 +11,7 @@
     {
       "left": {
         "type": "image",
-        "content": images/autumnTreasure/forest.png"
+        "content": "images/autumnTreasure/forest.png"
       },
       "right": {
         "type": "text",
@@ -31,7 +31,7 @@
     {
       "left": {
         "type": "image",
-        "content": "images/autumnTreasure/treasure.png."
+        "content": "images/autumnTreasure/treasure.png"
       },
       "right": {
         "type": "text",

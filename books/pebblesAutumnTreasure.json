@@ -2,7 +2,7 @@
   "bookId": "pebbles-02",
   "title": "Pebbles and the Autumn Treasure",
   "author": "Inspired by J. A. Puddephat",
-  "coverImage": "images/autumn Treasure/autumn_treasure.png",
+  "coverImage": "images/autumnTreasure/autumn_treasure.png",
   "credits": [
     "Original character by J. A. Puddephat",
     "Story and image descriptions by Gemini"
@@ -11,7 +11,7 @@
     {
       "left": {
         "type": "image",
-        "content": images/autumn Treasure/forest.png"
+        "content": images/autumnTreasure/forest.png"
       },
       "right": {
         "type": "text",
@@ -25,13 +25,13 @@
       },
       "right": {
         "type": "image",
-        "content": "images/autumn Treasure/down_the_tree.png"
+        "content": "images/autumnTreasure/down_the_tree.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "images/autumn Treasure/treasure.png."
+        "content": "images/autumnTreasure/treasure.png."
       },
       "right": {
         "type": "text",
@@ -45,13 +45,13 @@
       },
       "right": {
         "type": "image",
-        "content": "images/autumn Treasure/oops.png"
+        "content": "images/autumnTreasure/oops.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "images/autumn Treasure/looking_for_this.png"
+        "content": "images/autumnTreasure/looking_for_this.png"
       },
       "right": {
         "type": "text",
@@ -65,13 +65,13 @@
       },
       "right": {
         "type": "image",
-        "content": "images/autumn Treasure/searching.png"
+        "content": "images/autumnTreasure/searching.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "images/autumn Treasure/found_it.png"
+        "content": "images/autumnTreasure/found_it.png"
       },
       "right": {
         "type": "text",
@@ -85,13 +85,13 @@
       },
       "right": {
         "type": "image",
-        "content": "images/autumn Treasure/homeward_bound.png"
+        "content": "images/autumnTreasure/homeward_bound.png"
       }
     },
     {
       "left": {
         "type": "image",
-        "content": "images/autumn Treasure/the_nest.png"
+        "content": "images/autumnTreasure/the_nest.png"
       },
       "right": {
         "type": "text",
@@ -105,7 +105,7 @@
       },
       "right": {
         "type": "image",
-        "content": "images/autumn Treasure/snug.png"
+        "content": "images/autumnTreasure/snug.png"
       }
     }
   ]
